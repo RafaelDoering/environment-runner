@@ -83,6 +83,10 @@ program
     child.stdout.on('data', (data) => {
       console.log(chalk.green(data.toString()));
     });
+
+    child.stderr.on('data', (data) => {
+      console.log(chalk.red(data.toString()));
+    });
   });
 
 program.parse();
