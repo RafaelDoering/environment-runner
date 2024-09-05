@@ -23,12 +23,12 @@ program
 
     let i = 0
     while (true) {
-      const { command, description, isDone } = await inquirer
+      const { command, description, isFinished } = await inquirer
         .prompt([
           {
             type: "input",
             name: "command",
-            message: "Whats is the first command?",
+            message: "Whats is the command?",
           },
           {
             type: "input",
@@ -37,9 +37,9 @@ program
           },
           {
             type: "list",
-            name: "isDone",
-            message: "Is Done?",
-            choices: ["s", "n"]
+            name: "isFinished",
+            message: "That is it?",
+            choices: ["no", "yes"]
           },
         ])
       commands.push({
@@ -48,7 +48,7 @@ program
         description
       });
       i++;
-      if (isDone === "s") {
+      if (isFinished === "yes") {
         break;
       }
     }
@@ -60,18 +60,18 @@ program
   .command('execute')
   .description('Execute commands')
   .action(async () => {
-    const { file } = await inquirer
+    const { filePath } = await inquirer
       .prompt([
         {
           type: "input",
-          name: "file",
-          message: "What file?",
+          name: "filePath",
+          message: "What is file?",
         },
       ])
 
-    const fileContent = await fs.readFileSync(file, "utf8");
+    const file = await fs.readFileSync(filePath, "utf8");
 
-    const parsedCommands: Command[] = JSON.parse(fileContent);
+    const parsedCommands: Command[] = JSON.parse(file);
 
     let commandsString = "";
     for (const command of parsedCommands) {
