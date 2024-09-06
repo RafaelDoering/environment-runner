@@ -1,7 +1,7 @@
 import { CommandEntity } from "../core/command";
 import Storage from "../ports/storage";
 
-export default class TodoInMemoryStorage implements Storage<CommandEntity> {
+export default class CommandInMemoryStorage implements Storage<CommandEntity> {
   private commands: CommandEntity[] = [];
 
   constructor() { }

@@ -2,22 +2,27 @@ import { exec } from "child_process";
 
 import Logger from "../../ports/logger";
 import Prompter from "../../ports/prompter";
-import Reader from "../../ports/reader";
 import Command from "../command";
 import Action from "./action";
+import Repository from "../../ports/repository";
 
 class ExecuteAction implements Action {
-  constructor(private logger: Logger, private reader: Reader, private prompter: Prompter) { }
+  constructor(
+    private logger: Logger,
+    private prompter: Prompter,
+    private repository: Repository<Command>
+  ) { }
 
   public async run() {
-    const filePath = await this.prompter.input("What is file?")
+    const isToRun = await this.prompter.list("Run?", ["yes", "no"]);
+    if (isToRun !== "yes") {
+      return;
+    }
 
-    const file = await this.reader.read(filePath);
-
-    const parsedCommands: Command[] = JSON.parse(file);
+    const commands = await this.repository.findAll();
 
     let commandsString = "";
-    for (const command of parsedCommands) {
+    for (const command of commands) {
       commandsString += command.command + " && ";
     }
     commandsString = commandsString.substring(0, commandsString.length - 4);
