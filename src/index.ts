@@ -1,13 +1,20 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
-
-import chalk from 'chalk';
 import { Command as Cmd } from 'commander';
-import inquirer from 'inquirer';
 
-import Command from './core/command';
-import { exec } from 'child_process';
+import FileReader from './adapters/file-reader';
+import FileWriter from './adapters/file-writer';
+import ChalkLogger from './adapters/chalk-logger';
+import InquirerPrompter from './adapters/inquirer-prompter';
+import CreateAction from './core/actions/create';
+import ExecuteAction from './core/actions/execute';
+
+const reader = new FileReader();
+const writer = new FileWriter();
+const logger = new ChalkLogger();
+const prompter = new InquirerPrompter();
+const createAction = new CreateAction(logger, writer, prompter);
+const executeAction = new ExecuteAction(logger, reader, prompter);
 
 const program = new Cmd();
 
@@ -18,75 +25,11 @@ program
 program
   .command('create')
   .description('Create commands')
-  .action(async () => {
-    const commands: Command[] = [];
-
-    let i = 0
-    while (true) {
-      const { command, description, isFinished } = await inquirer
-        .prompt([
-          {
-            type: "input",
-            name: "command",
-            message: "Whats is the command?",
-          },
-          {
-            type: "input",
-            name: "description",
-            message: "Whats is this command description?",
-          },
-          {
-            type: "list",
-            name: "isFinished",
-            message: "That is it?",
-            choices: ["no", "yes"]
-          },
-        ])
-      commands.push({
-        id: i.toString(),
-        command,
-        description
-      });
-      i++;
-      if (isFinished === "yes") {
-        break;
-      }
-    }
-    console.log(chalk.green(JSON.stringify(commands)));
-    await fs.writeFileSync("commands.json", JSON.stringify(commands));
-  });
+  .action(async () => createAction.run());
 
 program
   .command('execute')
   .description('Execute commands')
-  .action(async () => {
-    const { filePath } = await inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "filePath",
-          message: "What is file?",
-        },
-      ])
-
-    const file = await fs.readFileSync(filePath, "utf8");
-
-    const parsedCommands: Command[] = JSON.parse(file);
-
-    let commandsString = "";
-    for (const command of parsedCommands) {
-      commandsString += command.command + " && ";
-    }
-    commandsString = commandsString.substring(0, commandsString.length - 4);
-    const child = exec(commandsString);
-
-    child.stdout.on('data', (data) => {
-      console.log(chalk.green(data.toString()));
-    });
-
-    child.stderr.on('data', (data) => {
-      console.log(chalk.red(data.toString()));
-    });
-  });
+  .action(async () => executeAction.run());
 
 program.parse();
