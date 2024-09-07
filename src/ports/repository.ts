@@ -5,7 +5,9 @@ export default interface Repository<T> {
 
   findAll(): Promise<T[]>;
 
-  updateById(id: string, entity: T): Promise<void>;
+  update(entity: T): Promise<void>;
 
-  deleteById(entity: T): Promise<void>;
+  delete(entity: T): Promise<void>;
+
+  purge(): Promise<void>
 }

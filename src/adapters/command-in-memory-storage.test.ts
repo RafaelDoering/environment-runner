@@ -21,20 +21,6 @@ test("find command when command was created", async () => {
   expect(createdCommand).toBe(commandEntity);
 });
 
-test("doesn't find command when command was deleted", async () => {
-  const command: Command = {
-    id: "0",
-    description: "0",
-    command: "0",
-  }
-  const commandEntity = new CommandEntity(command);
-  await commandInMemoryStorage.save(commandEntity);
-  await commandInMemoryStorage.delete(commandEntity);
-  const createdCommand = await commandInMemoryStorage.findById(command.id);
-
-  expect(createdCommand).toBeFalsy();
-});
-
 test("save updates data when command already exists", async () => {
   const command: Command = {
     id: "0",
@@ -52,4 +38,32 @@ test("save updates data when command already exists", async () => {
 
   expect(updatedCommand.description).toBe("1");
   expect(updatedCommand.command).toBe(commandEntity.command);
+});
+
+test("doesn't find command when command was deleted", async () => {
+  const command: Command = {
+    id: "0",
+    description: "0",
+    command: "0",
+  }
+  const commandEntity = new CommandEntity(command);
+  await commandInMemoryStorage.save(commandEntity);
+  await commandInMemoryStorage.delete(commandEntity);
+  const createdCommand = await commandInMemoryStorage.findById(command.id);
+
+  expect(createdCommand).toBeFalsy();
+});
+
+test("doesn't find command when purged", async () => {
+  const command: Command = {
+    id: "0",
+    description: "0",
+    command: "0",
+  }
+  const commandEntity = new CommandEntity(command);
+  await commandInMemoryStorage.save(commandEntity);
+  await commandInMemoryStorage.purge();
+  const createdCommand = await commandInMemoryStorage.findById(command.id);
+
+  expect(createdCommand).toBeFalsy();
 });

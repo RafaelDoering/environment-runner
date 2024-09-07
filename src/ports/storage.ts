@@ -6,4 +6,6 @@ export default interface Storage<T> {
   findAll(): Promise<T[]>;
 
   delete(entity: T): Promise<void>;
+
+  purge(): Promise<void>;
 }

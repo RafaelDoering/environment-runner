@@ -6,13 +6,27 @@ import Action from "./action";
 
 class CreateAction implements Action {
   constructor(
-    private logger: Logger,
     private prompter: Prompter,
     private repository: Repository<Command>
   ) { }
 
   public async run() {
-    let index = 0
+    const isToLoadPrevious = await this.prompter.list("Load previous?", ["no", "yes"]);
+
+    let index = 0;
+    if (isToLoadPrevious === "yes") {
+      const previousCommands = await this.repository.findAll();
+      if (previousCommands.length > 0) {
+        for (const command of previousCommands) {
+          await this.repository.create(command);
+        }
+
+        index = previousCommands.length;
+      }
+    } else {
+      await this.repository.purge();
+    }
+
     while (true) {
       const command = await this.prompter.input("Whats is the command?");
       const description = await this.prompter.input("Whats is this command description?");

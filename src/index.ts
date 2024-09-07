@@ -19,7 +19,7 @@ const logger = new ChalkLogger();
 const prompter = new InquirerPrompter();
 const commandStorage = new CommandReaderWriterStorage(reader, writer, FILE_PATH);
 const commandRepository = new CommandRepository(commandStorage);
-const createAction = new CreateAction(logger, prompter, commandRepository);
+const createAction = new CreateAction(prompter, commandRepository);
 const executeAction = new ExecuteAction(logger, prompter, commandRepository);
 
 const program = new Cmd();

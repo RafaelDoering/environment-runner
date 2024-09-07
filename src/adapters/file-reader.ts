@@ -4,7 +4,11 @@ import Reader from "../ports/reader";
 
 class FileReader implements Reader {
   async read(path: string) {
-    return await fs.readFileSync(path, "utf8");
+    try {
+      return await fs.readFileSync(path, "utf8");
+    } catch (error) {
+      return null;
+    }
   }
 }
 

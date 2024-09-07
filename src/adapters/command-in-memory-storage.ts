@@ -6,7 +6,7 @@ export default class CommandInMemoryStorage implements Storage<CommandEntity> {
 
   constructor() { }
 
-  async save(entity: CommandEntity): Promise<void> {
+  async save(entity: CommandEntity) {
     const command = await this.findById(entity.id);
     if (command) {
       for (const key of Object.keys(command)) {
@@ -17,15 +17,19 @@ export default class CommandInMemoryStorage implements Storage<CommandEntity> {
     }
   }
 
-  async findById(id: string): Promise<CommandEntity> {
+  async findById(id: string) {
     return this.commands.find(command => command.id === id);
   }
 
-  async findAll(): Promise<CommandEntity[]> {
+  async findAll() {
     return this.commands;
   }
 
-  async delete(entity: CommandEntity): Promise<void> {
+  async delete(entity: CommandEntity) {
     this.commands = this.commands.filter(command => command.id !== entity.id);
+  }
+
+  async purge() {
+    this.commands = [];
   }
 }

@@ -17,13 +17,15 @@ export default class CommandRepository implements Repository<CommandEntity> {
     return await this.commandStorage.findAll();
   }
 
-  async updateById(id: string, entity: CommandEntity): Promise<void> {
-    entity.id = id;
-
+  async update(entity: CommandEntity) {
     await this.commandStorage.save(entity);
   }
 
-  async deleteById(entity: CommandEntity): Promise<void> {
+  async delete(entity: CommandEntity) {
     await this.commandStorage.delete(entity);
+  }
+
+  async purge() {
+    await this.commandStorage.purge();
   }
 }
