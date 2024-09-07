@@ -1,4 +1,3 @@
-import Logger from "../../ports/logger";
 import Prompter from "../../ports/prompter";
 import Repository from "../../ports/repository";
 import Command from "../command";
@@ -13,17 +12,7 @@ class CreateAction implements Action {
   public async run() {
     const isToLoadPrevious = await this.prompter.list("Load previous?", ["no", "yes"]);
 
-    let index = 0;
-    if (isToLoadPrevious === "yes") {
-      const previousCommands = await this.repository.findAll();
-      if (previousCommands.length > 0) {
-        for (const command of previousCommands) {
-          await this.repository.create(command);
-        }
-
-        index = previousCommands.length;
-      }
-    } else {
+    if (isToLoadPrevious === "no") {
       await this.repository.purge();
     }
 
@@ -33,7 +22,6 @@ class CreateAction implements Action {
       const isFinished = await this.prompter.list("That is it?", ["no", "yes"]);
 
       await this.repository.create({
-        id: index.toString(),
         command,
         description
       })
@@ -41,8 +29,6 @@ class CreateAction implements Action {
       if (isFinished === "yes") {
         break;
       }
-
-      index++;
     }
   }
 }

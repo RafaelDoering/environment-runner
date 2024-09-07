@@ -17,7 +17,7 @@ export default class CommandInMemoryStorage implements Storage<CommandEntity> {
     }
   }
 
-  async findById(id: string) {
+  async findById(id: number) {
     return this.commands.find(command => command.id === id);
   }
 

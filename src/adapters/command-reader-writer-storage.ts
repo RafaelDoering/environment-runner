@@ -21,7 +21,7 @@ export default class CommandReaderWriterStorage implements Storage<CommandEntity
     await this.writer.write(JSON.stringify(commands), this.path);
   }
 
-  async findById(id: string) {
+  async findById(id: number) {
     const commands = await this.findAll();
 
     return commands.find(command => command.id === id);

@@ -10,7 +10,7 @@ beforeEach(() => {
 
 test("find command when command was created", async () => {
   const command: Command = {
-    id: "0",
+    id: 0,
     description: "0",
     command: "0",
   }
@@ -23,7 +23,7 @@ test("find command when command was created", async () => {
 
 test("save updates data when command already exists", async () => {
   const command: Command = {
-    id: "0",
+    id: 0,
     description: "0",
     command: "0",
   }
@@ -42,7 +42,7 @@ test("save updates data when command already exists", async () => {
 
 test("doesn't find command when command was deleted", async () => {
   const command: Command = {
-    id: "0",
+    id: 0,
     description: "0",
     command: "0",
   }
@@ -56,7 +56,7 @@ test("doesn't find command when command was deleted", async () => {
 
 test("doesn't find command when purged", async () => {
   const command: Command = {
-    id: "0",
+    id: 0,
     description: "0",
     command: "0",
   }

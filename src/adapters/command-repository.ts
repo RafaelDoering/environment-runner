@@ -9,7 +9,7 @@ export default class CommandRepository implements Repository<CommandEntity> {
     await this.commandStorage.save(entity);
   }
 
-  async findById(id: string): Promise<CommandEntity> {
+  async findById(id: number): Promise<CommandEntity> {
     return await this.commandStorage.findById(id);
   }
 

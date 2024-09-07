@@ -1,13 +1,13 @@
-type Command = {
-  id: string;
+interface Command {
+  id?: number;
   description: string;
   command: string;
 }
 
 export default Command;
 
-export class CommandEntity {
-  public id: string;
+export class CommandEntity implements Command {
+  public id: number;
   public description: string;
   public command: string;
 
