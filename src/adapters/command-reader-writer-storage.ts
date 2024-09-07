@@ -1,12 +1,12 @@
-import { CommandEntity } from "../core/command";
+import Command from "../core/command";
 import Reader from "../ports/reader";
 import Storage from "../ports/storage";
 import Writer from "../ports/writer";
 
-export default class CommandReaderWriterStorage implements Storage<CommandEntity> {
+export default class CommandReaderWriterStorage implements Storage<Command> {
   constructor(private reader: Reader, private writer: Writer, private path?: string) { }
 
-  async save(entity: CommandEntity) {
+  async save(entity: Command) {
     const commands = await this.findAll();
 
     const command = await this.findById(entity.id);
@@ -28,12 +28,12 @@ export default class CommandReaderWriterStorage implements Storage<CommandEntity
   }
 
   async findAll() {
-    const commands = JSON.parse(await this.reader.read(this.path)) as CommandEntity[];
+    const commands = JSON.parse(await this.reader.read(this.path)) as Command[];
 
     return commands || [];
   }
 
-  async delete(entity: CommandEntity) {
+  async delete(entity: Command) {
     let commands = await this.findAll();
 
     commands = commands.filter(command => command.id !== entity.id);

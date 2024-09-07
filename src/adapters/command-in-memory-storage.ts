@@ -1,12 +1,12 @@
-import { CommandEntity } from "../core/command";
+import Command from "../core/command";
 import Storage from "../ports/storage";
 
-export default class CommandInMemoryStorage implements Storage<CommandEntity> {
-  private commands: CommandEntity[] = [];
+export default class CommandInMemoryStorage implements Storage<Command> {
+  private commands: Command[] = [];
 
   constructor() { }
 
-  async save(entity: CommandEntity) {
+  async save(entity: Command) {
     const command = await this.findById(entity.id);
     if (command) {
       for (const key of Object.keys(command)) {
@@ -25,7 +25,7 @@ export default class CommandInMemoryStorage implements Storage<CommandEntity> {
     return this.commands;
   }
 
-  async delete(entity: CommandEntity) {
+  async delete(entity: Command) {
     this.commands = this.commands.filter(command => command.id !== entity.id);
   }
 
