@@ -22,9 +22,9 @@ class RunAction implements Action {
 
     const application = applications.find((application) => application.name === applicationName);
 
-    let commandsString = "";
-    for (const command of application.commands) {
-      commandsString += command.command + " && ";
+    let commandsString = `cd ${application.absolutePath} && `;
+    for (const command of application.upCommands) {
+      commandsString += `${command.command} && `;
     }
     commandsString = commandsString.substring(0, commandsString.length - 4);
     const child = exec(commandsString);

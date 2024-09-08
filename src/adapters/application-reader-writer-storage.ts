@@ -14,7 +14,9 @@ export default class ApplicationSequelizeStorage implements Storage<Application>
       application.id = entity.id;
       application.name = entity.name;
       application.description = entity.description;
-      application.commands = entity.commands.map((command, index) => ({ ...command, id: index }));
+      application.absolutePath = entity.absolutePath;
+      application.upCommands = entity.upCommands.map((command, index) => ({ ...command, id: index }));
+      application.downCommands = entity.downCommands.map((command, index) => ({ ...command, id: index }));
     } else {
       applications.push({ ...entity, id: applications.length });
     }

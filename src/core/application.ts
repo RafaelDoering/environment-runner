@@ -8,7 +8,9 @@ interface Application {
   id?: number;
   name: string;
   description: string;
-  commands: Command[];
+  absolutePath: string;
+  upCommands: Command[];
+  downCommands: Command[];
 }
 
 export default Application;
