@@ -1,5 +1,5 @@
 export default interface Repository<T> {
-  create(entity: T): Promise<void>;
+  create(entity: T): Promise<T>;
 
   findById(id: number): Promise<T>;
 

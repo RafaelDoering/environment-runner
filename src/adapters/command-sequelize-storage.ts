@@ -1,7 +1,9 @@
-import { Table, Column, Model, DataType, AllowNull } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, AllowNull, ForeignKey, BelongsTo } from 'sequelize-typescript';
 
 import Command from "../core/command";
 import Storage from "../ports/storage";
+import { ApplicationModel } from './application-sequelize-storage';
+import Application from '../core/application';
 
 @Table({ modelName: 'Command' })
 class CommandModel extends Model implements Command {
@@ -18,14 +20,21 @@ class CommandModel extends Model implements Command {
   @AllowNull(false)
   @Column(DataType.STRING)
   command: string;
+
+  @ForeignKey(() => ApplicationModel)
+  @Column(DataType.INTEGER)
+  applicationId: number;
+
+  @BelongsTo(() => ApplicationModel, 'applicationId')
+  application: Application;
 }
 
 export default class CommandSequelizeStorage implements Storage<Command> {
   constructor() { }
 
-  async save(entity: Command) {
+  async save(entity: Command): Promise<Command> {
     const command = new CommandModel({ ...entity });
-    await command.save();
+    return command.save();
   }
 
   async findById(id: number) {

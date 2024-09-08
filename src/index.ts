@@ -9,6 +9,9 @@ import ExecuteAction from './core/actions/execute';
 import CommandRepository from './adapters/command-repository';
 import Database from './adapters/sequelize';
 import CommandSequelizeStorage from './adapters/command-sequelize-storage';
+import ApplicationSequelizeStorage from './adapters/application-sequelize-storage';
+import ApplicationRepository from './adapters/application-repository';
+import ApplicationAction from './core/actions/applications';
 
 async function main() {
   const database = new Database();
@@ -20,6 +23,9 @@ async function main() {
   const commandRepository = new CommandRepository(commandStorage);
   const createAction = new CreateAction(prompter, commandRepository);
   const executeAction = new ExecuteAction(logger, prompter, commandRepository);
+  const applicationStorage = new ApplicationSequelizeStorage();
+  const applicationRepository = new ApplicationRepository(applicationStorage);
+  const applicationAction = new ApplicationAction(logger, prompter, applicationRepository, commandRepository);
 
   const program = new Cmd();
 
@@ -36,6 +42,11 @@ async function main() {
     .command('execute')
     .description('Execute commands')
     .action(async () => executeAction.run());
+
+  program
+    .command('application')
+    .description('Manage applications')
+    .action(async () => applicationAction.run());
 
   program.parse();
 }

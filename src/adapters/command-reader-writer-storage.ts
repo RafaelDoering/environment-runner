@@ -19,6 +19,8 @@ export default class CommandReaderWriterStorage implements Storage<Command> {
     }
 
     await this.writer.write(JSON.stringify(commands), this.path);
+
+    return entity;
   }
 
   async findById(id: number) {

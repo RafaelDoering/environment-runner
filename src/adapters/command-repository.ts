@@ -5,8 +5,8 @@ import Storage from "../ports/storage";
 export default class CommandRepository implements Repository<Command> {
   constructor(private commandStorage: Storage<Command>) { }
 
-  async create(entity: Command): Promise<void> {
-    await this.commandStorage.save(entity);
+  async create(entity: Command) {
+    return this.commandStorage.save(entity);
   }
 
   async findById(id: number): Promise<Command> {

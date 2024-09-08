@@ -1,7 +1,7 @@
 import Command from "./command";
 
-type Application = {
-  id?: string;
+interface Application {
+  id?: number;
   name: string;
   description: string;
   commands: Command[];

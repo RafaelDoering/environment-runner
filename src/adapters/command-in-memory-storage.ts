@@ -15,6 +15,8 @@ export default class CommandInMemoryStorage implements Storage<Command> {
     } else {
       this.commands.push(entity);
     }
+
+    return entity;
   }
 
   async findById(id: number) {
