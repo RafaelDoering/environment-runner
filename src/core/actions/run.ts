@@ -2,27 +2,28 @@ import { exec } from "child_process";
 
 import Logger from "../../ports/logger";
 import Prompter from "../../ports/prompter";
-import Command from "../command";
 import Action from "./action";
 import Repository from "../../ports/repository";
+import Application from "../application";
 
-class ExecuteAction implements Action {
+class RunAction implements Action {
   constructor(
     private logger: Logger,
     private prompter: Prompter,
-    private repository: Repository<Command>
+    private repository: Repository<Application>
   ) { }
 
   public async run() {
-    const isToRun = await this.prompter.list("Run?", ["yes", "no"]);
-    if (isToRun !== "yes") {
-      return;
-    }
+    const applications = await this.repository.findAll();
 
-    const commands = await this.repository.findAll();
+    const applicationNames = applications.map((application) => application.name);
+
+    const applicationName = await this.prompter.list("What application?", [...applicationNames]);
+
+    const application = applications.find((application) => application.name === applicationName);
 
     let commandsString = "";
-    for (const command of commands) {
+    for (const command of application.commands) {
       commandsString += command.command + " && ";
     }
     commandsString = commandsString.substring(0, commandsString.length - 4);
@@ -38,4 +39,4 @@ class ExecuteAction implements Action {
   }
 }
 
-export default ExecuteAction;
+export default RunAction;

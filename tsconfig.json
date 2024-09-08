@@ -2,10 +2,5 @@
   "compilerOptions": {
     "outDir": "./build",
     "esModuleInterop": true,
-    "target": "ES6",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "moduleResolution": "NodeNext",
-    "module": "NodeNext"
   }
 }

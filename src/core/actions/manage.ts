@@ -2,15 +2,13 @@ import Logger from "../../ports/logger";
 import Prompter from "../../ports/prompter";
 import Repository from "../../ports/repository";
 import Application from "../application";
-import Command from "../command";
 import Action from "./action";
 
-class ApplicationAction implements Action {
+class ManageAction implements Action {
   constructor(
     private logger: Logger,
     private prompter: Prompter,
     private applicationRepository: Repository<Application>,
-    private commandRepository: Repository<Command>
   ) { }
 
   public async run() {
@@ -45,9 +43,8 @@ class ApplicationAction implements Action {
       } else {
         const command = await this.prompter.input("Command?");
         const description = await this.prompter.input("Description?");
-        const savedCommand = await this.commandRepository.create({ command, description });
 
-        application.commands.push(savedCommand);
+        application.commands.push({ command, description });
 
         await this.applicationRepository.update(application);
       }
@@ -55,4 +52,4 @@ class ApplicationAction implements Action {
   }
 }
 
-export default ApplicationAction;
+export default ManageAction;

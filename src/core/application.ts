@@ -1,4 +1,8 @@
-import Command from "./command";
+interface Command {
+  id?: number;
+  description: string;
+  command: string;
+}
 
 interface Application {
   id?: number;
@@ -8,3 +12,4 @@ interface Application {
 }
 
 export default Application;
+export { Command };
