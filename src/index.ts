@@ -10,17 +10,19 @@ import ApplicationRepository from './adapters/application-repository';
 import ManageAction from './core/actions/manage';
 import FileReader from './adapters/file-reader';
 import FileWriter from './adapters/file-writer';
+import NodeChildProcessTerminal from './adapters/node-child-process-terminal';
 
 const FILE_PATH = "./database.json";
 
 async function main() {
   const logger = new ChalkLogger();
+  const terminal = new NodeChildProcessTerminal(logger);
   const prompter = new InquirerPrompter();
   const reader = new FileReader();
   const writer = new FileWriter();
   const applicationStorage = new ApplicationStorage(reader, writer, FILE_PATH);
   const applicationRepository = new ApplicationRepository(applicationStorage);
-  const runAction = new RunAction(logger, prompter, applicationRepository);
+  const runAction = new RunAction(prompter, applicationRepository, terminal);
   const applicationAction = new ManageAction(logger, prompter, applicationRepository);
 
   const program = new Cmd();

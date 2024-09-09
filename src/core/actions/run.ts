@@ -1,16 +1,14 @@
-import { exec } from "child_process";
-
-import Logger from "../../ports/logger";
 import Prompter from "../../ports/prompter";
 import Action from "./action";
 import Repository from "../../ports/repository";
-import Application from "../application";
+import Application, { Command } from "../application";
+import Terminal from "../../ports/terminal";
 
 class RunAction implements Action {
   constructor(
-    private logger: Logger,
     private prompter: Prompter,
-    private repository: Repository<Application>
+    private repository: Repository<Application>,
+    private terminal: Terminal
   ) { }
 
   public async run() {
@@ -22,20 +20,19 @@ class RunAction implements Action {
 
     const application = applications.find((application) => application.name === applicationName);
 
-    let commandsString = `cd ${application.absolutePath} && `;
-    for (const command of application.upCommands) {
+    const commandsString = this.getCommandsString(application.absolutePath, application.upCommands)
+
+    this.terminal.execute(commandsString);
+  }
+
+  private getCommandsString(absolutePath: string, commands: Command[]) {
+    let commandsString = `cd ${absolutePath} && `;
+    for (const command of commands) {
       commandsString += `${command.command} && `;
     }
     commandsString = commandsString.substring(0, commandsString.length - 4);
-    const child = exec(commandsString);
 
-    child.stdout.on('data', (data) => {
-      this.logger.green(data.toString());
-    });
-
-    child.stderr.on('data', (data) => {
-      this.logger.red(data.toString());
-    });
+    return commandsString;
   }
 }
 
